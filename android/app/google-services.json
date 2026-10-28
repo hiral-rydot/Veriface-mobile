@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "992547682618",
+    "project_id": "turnout-serco-d774e",
+    "storage_bucket": "turnout-serco-d774e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992547682618:android:a69d73b10bb4a98a84b803",
+        "android_client_info": {
+          "package_name": "com.veriface.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLV6zfR0xzYiu7yaYq6MKFqs9MBkL7vJc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

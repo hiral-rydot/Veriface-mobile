@@ -25,39 +25,80 @@ index e327b65..7835fe3 100644
 +
  module.exports = Text;
 diff --git a/node_modules/react-native/index.js b/node_modules/react-native/index.js
-index 99a5a5e..8fd28b4 100644
+index 99a5a5e..72da686 100644
 --- a/node_modules/react-native/index.js
 +++ b/node_modules/react-native/index.js
-@@ -755,4 +755,32 @@ if (__DEV__) {
+@@ -127,7 +127,13 @@ module.exports = {
+     return require('./Libraries/Lists/FlatList');
+   },
+   get Image(): Image {
+-    return require('./Libraries/Image/Image');
++    const ImageComponent = require('./Libraries/Image/Image');
++    try {
++      if (!ImageComponent.propTypes) {
++        ImageComponent.propTypes = require('deprecated-react-native-prop-types').ImagePropTypes;
++      }
++    } catch (e) {}
++    return ImageComponent;
+   },
+   get ImageBackground(): ImageBackground {
+     return require('./Libraries/Image/ImageBackground');
+@@ -175,10 +181,22 @@ module.exports = {
+     return require('./Libraries/Components/Switch/Switch').default;
+   },
+   get Text(): Text {
+-    return require('./Libraries/Text/Text');
++    const TextComponent = require('./Libraries/Text/Text');
++    try {
++      if (!TextComponent.propTypes) {
++        TextComponent.propTypes = require('deprecated-react-native-prop-types').TextPropTypes;
++      }
++    } catch (e) {}
++    return TextComponent;
+   },
+   get TextInput(): TextInput {
+-    return require('./Libraries/Components/TextInput/TextInput');
++    const TextInputComponent = require('./Libraries/Components/TextInput/TextInput');
++    try {
++      if (!TextInputComponent.propTypes) {
++        TextInputComponent.propTypes = require('deprecated-react-native-prop-types').TextInputPropTypes;
++      }
++    } catch (e) {}
++    return TextInputComponent;
+   },
+   get Touchable(): Touchable {
+     return require('./Libraries/Components/Touchable/Touchable').default;
+@@ -196,7 +214,13 @@ module.exports = {
+     return require('./Libraries/Components/Touchable/TouchableWithoutFeedback');
+   },
+   get View(): View {
+-    return require('./Libraries/Components/View/View');
++    const ViewComponent = require('./Libraries/Components/View/View');
++    try {
++      if (!ViewComponent.propTypes) {
++        ViewComponent.propTypes = require('deprecated-react-native-prop-types').ViewPropTypes;
++      }
++    } catch (e) {}
++    return ViewComponent;
+   },
+   get VirtualizedList(): VirtualizedList {
+     return require('./Libraries/Lists/VirtualizedList');
+@@ -389,6 +413,18 @@ module.exports = {
+         'LogBox is enabled by default so there is no need to call unstable_enableLogBox() anymore. This is a no op and will be removed in the next version.',
        );
-     },
-   });
-+
-+  Object.defineProperty(module.exports, 'ViewPropTypes', {
-+    configurable: true,
-+    get() {
-+      return require('deprecated-react-native-prop-types').ViewPropTypes;
-+    },
-+  });
-+
-+  Object.defineProperty(module.exports, 'ColorPropType', {
-+    configurable: true,
-+    get() {
-+      return require('deprecated-react-native-prop-types').ColorPropType;
-+    },
-+  });
-+
-+  Object.defineProperty(module.exports, 'EdgeInsetsPropType', {
-+    configurable: true,
-+    get() {
-+      return require('deprecated-react-native-prop-types').EdgeInsetsPropType;
-+    },
-+  });
-+
-+  Object.defineProperty(module.exports, 'PointPropType', {
-+    configurable: true,
-+    get() {
-+      return require('deprecated-react-native-prop-types').PointPropType;
-+    },
-+  });
- }
+   },
++  get ViewPropTypes(): any {
++    return require('deprecated-react-native-prop-types').ViewPropTypes;
++  },
++  get ColorPropType(): any {
++    return require('deprecated-react-native-prop-types').ColorPropType;
++  },
++  get EdgeInsetsPropType(): any {
++    return require('deprecated-react-native-prop-types').EdgeInsetsPropType;
++  },
++  get PointPropType(): any {
++    return require('deprecated-react-native-prop-types').PointPropType;
++  },
+ };
+ 
+ if (__DEV__) {

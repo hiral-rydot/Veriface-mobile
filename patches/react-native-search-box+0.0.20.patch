@@ -1,0 +1,31 @@
+diff --git a/node_modules/react-native-search-box/index.js b/node_modules/react-native-search-box/index.js
+index 5e387c8..131e355 100644
+--- a/node_modules/react-native-search-box/index.js
++++ b/node_modules/react-native-search-box/index.js
+@@ -527,20 +527,20 @@ Search.propTypes = {
+   inputStyle: PropTypes.oneOfType([
+     PropTypes.number,
+     PropTypes.object,
+-    ViewPropTypes.style,
+-    Text.propTypes.style
++    ViewPropTypes ? ViewPropTypes.style : PropTypes.any,
++    (Text.propTypes && Text.propTypes.style) ? Text.propTypes.style : PropTypes.any
+   ]),
+   direction: PropTypes.oneOf(['ltr', 'rtl']),
+   cancelButtonStyle: PropTypes.oneOfType([
+     PropTypes.number,
+     PropTypes.object,
+-    ViewPropTypes.style,
+-    Text.propTypes.style,
++    ViewPropTypes ? ViewPropTypes.style : PropTypes.any,
++    (Text.propTypes && Text.propTypes.style) ? Text.propTypes.style : PropTypes.any,
+   ]),
+   onLayout: PropTypes.func,
+-  cancelButtonTextStyle: Text.propTypes.style,
++  cancelButtonTextStyle: (Text.propTypes && Text.propTypes.style) ? Text.propTypes.style : PropTypes.any,
+ 
+-  cancelButtonViewStyle: PropTypes.oneOfType([PropTypes.object, ViewPropTypes.style]),
++  cancelButtonViewStyle: PropTypes.oneOfType([PropTypes.object, ViewPropTypes ? ViewPropTypes.style : PropTypes.any]),
+ 
+   /**
+    * text input

@@ -25,7 +25,8 @@ import createLogger from 'redux-logger';
 import reducer from './src/reducer/index';
 import rootSaga from './src/sagas';
 
-const sagaMiddleware = createSagaMiddleware();
+const createSaga = typeof createSagaMiddleware === 'function' ? createSagaMiddleware : (createSagaMiddleware && createSagaMiddleware.default ? createSagaMiddleware.default : createSagaMiddleware);
+const sagaMiddleware = createSaga();
 const store2 = compose(applyMiddleware(sagaMiddleware));
 
 const store = createStore(reducer, store2);
@@ -41,3 +42,6 @@ const Apps = () => (
   </Provider>
 );
 AppRegistry.registerComponent(appName, () => Apps);
+if (appName !== 'TurnoutM') {
+  AppRegistry.registerComponent('TurnoutM', () => Apps);
+}

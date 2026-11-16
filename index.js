@@ -3,7 +3,18 @@
  */
 
 import React from 'react';
-import { StatusBar } from "react-native";
+import { StatusBar, View, Text } from "react-native";
+import * as DeprecatedPropTypes from 'deprecated-react-native-prop-types';
+
+try {
+  if (View && !View.propTypes) {
+    View.propTypes = DeprecatedPropTypes.ViewPropTypes;
+  }
+  if (Text && !Text.propTypes) {
+    Text.propTypes = DeprecatedPropTypes.TextPropTypes;
+  }
+} catch (e) {}
+
 import { AppRegistry } from 'react-native';
 import App from './App';
 import { name as appName } from './app.json';

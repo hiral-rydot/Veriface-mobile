@@ -1,0 +1,63 @@
+diff --git a/node_modules/react-native/Libraries/Components/View/View.js b/node_modules/react-native/Libraries/Components/View/View.js
+index f1522cf..6d793e0 100644
+--- a/node_modules/react-native/Libraries/Components/View/View.js
++++ b/node_modules/react-native/Libraries/Components/View/View.js
+@@ -130,4 +130,8 @@ const View: component(
+ 
+ View.displayName = 'View';
+ 
++try {
++  View.propTypes = require('deprecated-react-native-prop-types').ViewPropTypes;
++} catch (e) {}
++
+ module.exports = View;
+diff --git a/node_modules/react-native/Libraries/Text/Text.js b/node_modules/react-native/Libraries/Text/Text.js
+index e327b65..7835fe3 100644
+--- a/node_modules/react-native/Libraries/Text/Text.js
++++ b/node_modules/react-native/Libraries/Text/Text.js
+@@ -534,4 +534,8 @@ const verticalAlignToTextAlignVerticalMap = {
+   middle: 'center',
+ };
+ 
++try {
++  Text.propTypes = require('deprecated-react-native-prop-types').TextPropTypes;
++} catch (e) {}
++
+ module.exports = Text;
+diff --git a/node_modules/react-native/index.js b/node_modules/react-native/index.js
+index 99a5a5e..8fd28b4 100644
+--- a/node_modules/react-native/index.js
++++ b/node_modules/react-native/index.js
+@@ -755,4 +755,32 @@ if (__DEV__) {
+       );
+     },
+   });
++
++  Object.defineProperty(module.exports, 'ViewPropTypes', {
++    configurable: true,
++    get() {
++      return require('deprecated-react-native-prop-types').ViewPropTypes;
++    },
++  });
++
++  Object.defineProperty(module.exports, 'ColorPropType', {
++    configurable: true,
++    get() {
++      return require('deprecated-react-native-prop-types').ColorPropType;
++    },
++  });
++
++  Object.defineProperty(module.exports, 'EdgeInsetsPropType', {
++    configurable: true,
++    get() {
++      return require('deprecated-react-native-prop-types').EdgeInsetsPropType;
++    },
++  });
++
++  Object.defineProperty(module.exports, 'PointPropType', {
++    configurable: true,
++    get() {
++      return require('deprecated-react-native-prop-types').PointPropType;
++    },
++  });
+ }

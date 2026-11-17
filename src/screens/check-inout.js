@@ -1,4 +1,5 @@
-import { RNCamera as Camera } from 'react-native-camera';
+import { Camera, useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
+import RNFS from 'react-native-fs';
 import React, { useState, useEffect, useRef } from 'react'
 import { style } from '../styles/style'
 import {
@@ -67,11 +68,14 @@ const CheckInOut = (props) => {
     const [currentDate, setCurrentDate] = useState('')
     const [currentTime, setCurrentTime] = useState('')
     const [statusMsg, setStatusMsg] = useState(msgFetchingLoc)
-    let camera = useRef(null)
+    const camera = useRef(null)
+    const device = useCameraDevice('front')
+    const { hasPermission, requestPermission } = useCameraPermission()
     const dispatch = useDispatch()
     let resCheckInOut = useSelector(state => state.resCheckInOut)
     let isLoading = useSelector(state => state.loading)
     useEffect(() => {
+        if (!hasPermission) requestPermission();
         resCheckInOut = null;
         var d = new Date();
         var n = d.toISOString();
@@ -244,62 +248,66 @@ const CheckInOut = (props) => {
     }
 
     const takePicture = async () => {
-
+        if (camera.current == null) {
+            console.log('takePicture: camera ref is null, device=', device);
+            Snackbar.show({ text: 'Camera is not ready, please try again.' });
+            return;
+        }
         try {
-            const options = {
-                quality: 0.5,
-                base64: true,
-                forceUpOrientation: true,
-                fixOrientation: true,
-            };
-            const data = await camera.takePictureAsync(options);
-            setImageData('data:image/jpeg;base64,' + data.base64)
-            // this.props.updateImage(data.uri);
-            // console.log('Path to image: ' + data.uri);
+            const photo = await camera.current.takePhoto({ flash: 'off' });
+            console.log('takePicture: photo path=', photo.path);
+            const base64 = await RNFS.readFile(photo.path, 'base64');
+            console.log('takePicture: base64 length=', base64 ? base64.length : 0);
+            setImageData('data:image/jpeg;base64,' + base64)
         } catch (err) {
-            console.log('err: ', err);
+            console.log('takePicture err: ', err);
+            Snackbar.show({ text: 'Failed to capture photo' });
         }
     };
 
     const renderCamera = () => {
-        return (
-            <Camera
-                ref={ref => (camera = ref)}
-                style={styles.preview}
-                captureAudio={false}
-                type={'front'}
-                flashMode={Camera.Constants.FlashMode.off}
-                androidCameraPermissionOptions={{
-                    title: 'Permission to use camera',
-                    message: 'We need your permission to use your camera',
-                    buttonPositive: 'Ok',
-                    buttonNegative: 'Cancel',
-                }}
-            >
-                <View style={styles.preview}>
-                    <Image source={require('../assets/images/checkin_bg.png')}
-                        style={[styles.preview, { resizeMode: 'stretch' }]} />
-                    <View style={{ flexDirection: 'row' }}>
-                        <TouchableHighlight
-                            style={styles.capture}
-                            onPress={() => takePicture()}
-                            underlayColor="rgba(255, 255, 255, 0.5)"
-                        >
-                            <Image source={require('../assets/images/save.png')}
-                                style={{ tintColor: whiteColor }} />
-                        </TouchableHighlight>
-                        <TouchableHighlight
-                            style={styles.capture}
-                            onPress={() => props.navigation.goBack(null)}
-                            underlayColor="rgba(255, 255, 255, 0.5)"
-                        >
-                            <Image source={require('../assets/images/close.png')}
-                                style={{ tintColor: whiteColor }} />
-                        </TouchableHighlight>
-                    </View>
-
+        const overlay = (
+            <View style={styles.preview}>
+                <Image source={require('../assets/images/checkin_bg.png')}
+                    style={[styles.preview, { resizeMode: 'stretch' }]} />
+                <View style={{ flexDirection: 'row' }}>
+                    <TouchableHighlight
+                        style={styles.capture}
+                        onPress={() => takePicture()}
+                        underlayColor="rgba(255, 255, 255, 0.5)"
+                    >
+                        <Image source={require('../assets/images/save.png')}
+                            style={{ tintColor: whiteColor }} />
+                    </TouchableHighlight>
+                    <TouchableHighlight
+                        style={styles.capture}
+                        onPress={() => props.navigation.goBack(null)}
+                        underlayColor="rgba(255, 255, 255, 0.5)"
+                    >
+                        <Image source={require('../assets/images/close.png')}
+                            style={{ tintColor: whiteColor }} />
+                    </TouchableHighlight>
                 </View>
-            </Camera>
+
+            </View>
+        );
+
+        if (device == null) {
+            return overlay;
+        }
+        return (
+            <View style={styles.preview}>
+                <Camera
+                    ref={camera}
+                    style={StyleSheet.absoluteFill}
+                    device={device}
+                    isActive={true}
+                    photo={true}
+                    onError={(e) => console.log('Camera onError: ', e)}
+                    onInitialized={() => console.log('Camera initialized')}
+                />
+                {overlay}
+            </View>
         );
     }
 

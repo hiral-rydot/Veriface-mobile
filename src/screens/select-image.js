@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Button, Image, Platform, Alert } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 import Snackbar from 'react-native-snackbar';
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { style } from '../styles/style';
 
 export default class SelectImage extends React.Component {

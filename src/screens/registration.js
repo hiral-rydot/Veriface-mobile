@@ -1,4 +1,4 @@
-import { RNCamera as Camera } from 'react-native-camera';
+import { Camera, useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
 import React, { useState, useEffect, useRef } from 'react'
 import { style } from '../styles/style'
 import {
@@ -55,11 +55,14 @@ const Registration = (props) => {
     const [isRecorded, setIsRecorded] = useState(false)
     const [isRetry, setIsRetry] = useState(false)
     const [statusMsg, setStatusMsg] = useState('Uploading...')
-    let camera = useRef(null)
+    const camera = useRef(null)
+    const device = useCameraDevice('front')
+    const { hasPermission, requestPermission } = useCameraPermission()
     const dispatch = useDispatch()
     let resRegistration = useSelector(state => state.resRegistration)
     let isLoading = useSelector(state => state.loading)
     useEffect(() => {
+        if (!hasPermission) requestPermission();
         resRegistration = null
     }, [])
     useEffect(() => {
@@ -110,95 +113,86 @@ const Registration = (props) => {
     const recordVideo = async () => {
 
         try {
-            const options = {
-                quality: Camera.Constants.VideoQuality['480p'],
-                orientation: 'portrait',
-                maxDuration: 3
-            };
-            const data = await camera.recordAsync(options);
-            setImageData('data:image/jpeg;base64,' + data.base64)
-            {
-                Platform.OS === "ios" ?
-                    setIsRecorded(true) : null
-            }
-            // this.props.updateImage(data.uri);
-            console.log('Path to image: ' + data.uri);
-            console.log('Path to image: ' + data.base64);
-
+            await camera.current.startRecording({
+                onRecordingError: (error) => {
+                    console.log('Recording error: ', error);
+                },
+            });
+            setTimeout(async () => {
+                try {
+                    const video = await camera.current.stopRecording();
+                    setVideoFile(video.path);
+                    setIsRecorded(true);
+                } catch (e) {
+                    console.log('stopRecording err: ', e);
+                }
+            }, 3000);
         } catch (err) {
             console.log('err: ', err);
         }
     };
 
     const renderCamera = () => {
-        return (
-            <Camera
-                ref={ref => (camera = ref)}
-                style={styles.preview}
-                captureAudio={false}
-                type={'front'}
-                flashMode={Camera.Constants.FlashMode.off}
-                onRecordingEnd={() => {
-                    //alert('Record End')
-                    camera.pausePreview()
-                    setIsRecorded(true)
-                }}
-                onRecordingStart={(event) => {
-                    ///alert(JSON.stringify(event.nativeEvent))
-                    setVideoFile(event.nativeEvent.uri)
-                }}
-                androidCameraPermissionOptions={{
-                    title: 'Permission to use camera',
-                    message: 'We need your permission to use your camera',
-                    buttonPositive: 'Ok',
-                    buttonNegative: 'Cancel',
-                }}
-            >
-                {(isRecorded) ?
-                    <View style={{ margin: 15, position: 'absolute', bottom: 30, alignSelf: 'center' }}>
-                        {(isLoading) ?
-                            <View style={[style.cardWhite, { flexDirection: 'row', justifyContent: 'center' }]}>
-                                <ActivityIndicator
-                                    animating={true}
-                                    color={blueColor}
-                                    size='small' />
-                                <Text style={[style.darkGrayText, { marginLeft: 10, }]}>{statusMsg}</Text>
-                            </View>
-                            : (isRetry) ? <BlueButton
-                                onPress={() => {
-                                    setImageData(null)
-                                    setIsRetry(false)
-                                }}
-                                title={'Retry'}
-                            /> : <BlueButton
-                                onPress={() => { wsCheckInOut() }}
-                                title={'Submit'}
-                            />}
-                        <BlueButton
-                            onPress={() => { props.navigation.goBack(null) }}
-                            title={'Cancel'}
-                            containerStyle={{ marginTop: 15, }}
-                        />
+        const content = (isRecorded) ?
+            <View style={{ margin: 15, position: 'absolute', bottom: 30, alignSelf: 'center' }}>
+                {(isLoading) ?
+                    <View style={[style.cardWhite, { flexDirection: 'row', justifyContent: 'center' }]}>
+                        <ActivityIndicator
+                            animating={true}
+                            color={blueColor}
+                            size='small' />
+                        <Text style={[style.darkGrayText, { marginLeft: 10, }]}>{statusMsg}</Text>
                     </View>
-                    : <View style={{ flexDirection: 'row' }}>
-                        <TouchableHighlight
-                            style={styles.capture}
-                            onPress={() => recordVideo()}
-                            underlayColor="rgba(255, 255, 255, 0.5)"
-                        >
-                            <Image source={require('../assets/images/save.png')}
-                                style={{ tintColor: whiteColor }} />
-                        </TouchableHighlight>
-                        <TouchableHighlight
-                            style={styles.capture}
-                            onPress={() => props.navigation.goBack(null)}
-                            underlayColor="rgba(255, 255, 255, 0.5)"
-                        >
-                            <Image source={require('../assets/images/close.png')}
-                                style={{ tintColor: whiteColor }} />
-                        </TouchableHighlight>
-                    </View>}
-            </Camera>
+                    : (isRetry) ? <BlueButton
+                        onPress={() => {
+                            setImageData(null)
+                            setIsRetry(false)
+                        }}
+                        title={'Retry'}
+                    /> : <BlueButton
+                        onPress={() => { wsCheckInOut() }}
+                        title={'Submit'}
+                    />}
+                <BlueButton
+                    onPress={() => { props.navigation.goBack(null) }}
+                    title={'Cancel'}
+                    containerStyle={{ marginTop: 15, }}
+                />
+            </View>
+            : <View style={{ flexDirection: 'row' }}>
+                <TouchableHighlight
+                    style={styles.capture}
+                    onPress={() => recordVideo()}
+                    underlayColor="rgba(255, 255, 255, 0.5)"
+                >
+                    <Image source={require('../assets/images/save.png')}
+                        style={{ tintColor: whiteColor }} />
+                </TouchableHighlight>
+                <TouchableHighlight
+                    style={styles.capture}
+                    onPress={() => props.navigation.goBack(null)}
+                    underlayColor="rgba(255, 255, 255, 0.5)"
+                >
+                    <Image source={require('../assets/images/close.png')}
+                        style={{ tintColor: whiteColor }} />
+                </TouchableHighlight>
+            </View>;
+
+        if (device == null) {
+            return <View style={styles.preview}>{content}</View>;
+        }
+        return (
+            <View style={styles.preview}>
+                <Camera
+                    ref={camera}
+                    style={StyleSheet.absoluteFill}
+                    device={device}
+                    isActive={!isRecorded}
+                    video={true}
+                    audio={false}
+                />
+                {content}
+            </View>
         );
     }
 

@@ -412,7 +412,7 @@ const MyVisitor = ({ navigation }) => {
                 <View style={{ ...styles.centeredView, backgroundColor: "#000000aa" }}>
                     {console.log("@@@@@@@@@@@@", modalData)}
                     <View style={{ ...styles.modalView, }}>
-                        <View style={{ width: "110%", flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, alignItems: 'center', paddingBottom: 12, borderBottomColor: '#D1D1D1', }} >
+                        <View style={{ width: "110%", flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, alignItems: 'center', paddingBottom: 12, paddingTop: 12, borderBottomColor: '#D1D1D1', }} >
                             <Text style={{ marginLeft: 17, fontSize: 18, fontFamily: 'Rubik-Regular' }}>Basic Information</Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <TouchableOpacity onPress={() => { setModalVisible(false); setmodalVisibleForQrGenerate(true); }}>
@@ -733,6 +733,7 @@ const MyVisitor = ({ navigation }) => {
                     end={{ x: 1.0, y: 1.0 }}
                     colors={['#0E5EF2', '#b5cefb']}
                     style={{
+                        paddingTop:10,
                         borderBottomLeftRadius: 25,
                         borderBottomRightRadius: 25,
                         height: 160

@@ -268,9 +268,10 @@ const MyTeam = ({ navigation }) => {
                     end={{ x: 1.0, y: 1.0 }}
                     colors={['#0E5EF2', '#b5cefb']}
                     style={{
+                        paddingTop:15,
                         borderBottomLeftRadius: 25,
                         borderBottomRightRadius: 25,
-                        height: 160
+                        height: 170
                     }}
                 >
                     <NavigationBar
@@ -342,14 +343,14 @@ const MyTeam = ({ navigation }) => {
                                                             .catch(() => { setRefreshing(false) });
                                                     }
                                                 }}>
-                                                    <Image source={require('../assets/images/cross.png')} style={{ height: 18, width: 18, tintColor: '#999999', margin: 5 }} resizeMode='contain' />
+                                                    <Image source={require('../assets/images/cross.png')} style={{ height: 18, width: 18, tintColor: '#999999', margin: 8 }} resizeMode='contain' />
                                                 </TouchableOpacity>
 
                                             ) :
                                                 <TouchableOpacity onPress={() => {
                                                     setClicked(true);
                                                 }}>
-                                                    <Image source={require('../assets/images/search1.png')} style={{ height: 14, width: 14, margin: 5 }} resizeMode="contain" />
+                                                    <Image source={require('../assets/images/search1.png')} style={{ height: 14, width: 14, margin: 8}} resizeMode="contain" />
                                                 </TouchableOpacity>
                                             }
                                         </View>
@@ -365,7 +366,7 @@ const MyTeam = ({ navigation }) => {
                     />
                 </LinearGradient>
 
-                <View style={{ marginTop: -110, padding: 18 }}>
+                <View style={{ marginTop: -100, padding: 18 }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <TouchableOpacity style={{ width: "48%" }} onPress={() => {
                             setTabIndex(0);

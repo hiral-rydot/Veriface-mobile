@@ -4,21 +4,13 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import io.realm.react.RealmReactPackage;
-import com.reactnativecommunity.netinfo.NetInfoPackage;
-import com.swmansion.reanimated.ReanimatedPackage;
-import com.horcrux.svg.SvgPackage;
-import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
-import com.swmansion.reanimated.ReanimatedPackage;
-import com.imagepicker.ImagePickerPackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
-import com.reactnativecommunity.netinfo.NetInfoPackage;
-import org.reactnative.maskedview.RNCMaskedViewPackage;
-import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
+import com.facebook.react.ReactHost;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
+import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
+import com.facebook.react.defaults.DefaultReactHost;
+import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.react.soloader.OpenSourceMergedSoMapping;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
@@ -27,7 +19,7 @@ import java.util.List;
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
-      new ReactNativeHost(this) {
+      new DefaultReactNativeHost(this) {
         @Override
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;
@@ -46,11 +38,26 @@ public class MainApplication extends Application implements ReactApplication {
         protected String getJSMainModuleName() {
           return "index";
         }
+
+        @Override
+        protected boolean isNewArchEnabled() {
+          return BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
+        }
+
+        @Override
+        protected Boolean isHermesEnabled() {
+          return BuildConfig.IS_HERMES_ENABLED;
+        }
       };
 
   @Override
   public ReactNativeHost getReactNativeHost() {
     return mReactNativeHost;
+  }
+
+  @Override
+  public ReactHost getReactHost() {
+    return DefaultReactHost.getDefaultReactHost(getApplicationContext(), getReactNativeHost());
   }
 
   @Override
@@ -60,6 +67,9 @@ public class MainApplication extends Application implements ReactApplication {
       SoLoader.init(this, OpenSourceMergedSoMapping.INSTANCE);
     } catch (java.io.IOException e) {
       e.printStackTrace();
+    }
+    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      DefaultNewArchitectureEntryPoint.load();
     }
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }

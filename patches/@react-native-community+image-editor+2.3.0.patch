@@ -1,0 +1,15 @@
+diff --git a/node_modules/@react-native-community/image-editor/package.json b/node_modules/@react-native-community/image-editor/package.json
+index e6b74f6..a3bfa32 100644
+--- a/node_modules/@react-native-community/image-editor/package.json
++++ b/node_modules/@react-native-community/image-editor/package.json
+@@ -37,8 +37,8 @@
+     "test:detox:clean": "rimraf example/android/build && rimraf example/android/app/build && rimraf example/android/.gradle && rimraf example/ios/build"
+   },
+   "peerDependencies": {
+-    "react": "^16.0",
+-    "react-native": ">=0.57 <0.62"
++    "react": ">=16.0",
++    "react-native": ">=0.57"
+   },
+   "devDependencies": {
+     "@babel/core": "^7.0.0",

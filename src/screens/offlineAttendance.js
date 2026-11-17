@@ -13,7 +13,7 @@ import { style } from '../styles/style'
 import { whiteColor, blueColor, iconColor } from '../styles/color'
 import { apiCheckInOut } from '../actions'
 import { useDispatch, useSelector } from 'react-redux'
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { utils } from '../utils/utils'
 import Snackbar from 'react-native-snackbar';
 

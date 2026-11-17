@@ -2,7 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Button, Image, Platform, Alert } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 import Snackbar from 'react-native-snackbar';
-import { SafeAreaView } from 'react-navigation'
+import { SafeAreaView } from 'react-navigation';
+import { style } from '../styles/style';
 
 export default class SelectImage extends React.Component {
     constructor(props) {
@@ -13,36 +14,24 @@ export default class SelectImage extends React.Component {
     }
 
     selectFile = () => {
-        var options = {
-            title: 'Select Image',
-            customButtons: [
-                {
-                    name: 'customOptionKey',
-                    title: 'Choose file from Custom Option'
-                },
-            ],
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
+        const options = {
+            mediaType: 'photo',
+            includeBase64: true,
         };
 
-        ImagePicker.showImagePicker(options, res => {
-            console.log('Response = ', res);
-
+        ImagePicker.launchImageLibrary(options, res => {
             if (res.didCancel) {
                 console.log('User cancelled image picker');
-            } else if (res.error) {
-                console.log('ImagePicker Error: ', res.error);
-            } else if (res.customButton) {
-                console.log('User tapped custom button: ', res.customButton);
-
-                Snackbar.show({ text: res.customButton })
-
-            } else {
-                let source = res;
+            } else if (res.errorCode) {
+                console.log('ImagePicker Error: ', res.errorMessage);
+                Snackbar.show({ text: res.errorMessage || 'ImagePicker Error' });
+            } else if (res.assets && res.assets.length > 0) {
+                const asset = res.assets[0];
                 this.setState({
-                    resourcePath: source,
+                    resourcePath: { uri: asset.uri, data: asset.base64 },
+                    filePath: res,
+                    fileData: asset.base64,
+                    fileUri: asset.uri,
                 });
             }
         });
@@ -50,59 +39,48 @@ export default class SelectImage extends React.Component {
 
     // Launch Camera
     cameraLaunch = () => {
-        let options = {
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
+        const options = {
+            mediaType: 'photo',
+            includeBase64: true,
+            saveToPhotos: false,
         };
         ImagePicker.launchCamera(options, (res) => {
-            console.log('Response = ', res);
-
             if (res.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (res.error) {
-                console.log('ImagePicker Error: ', res.error);
-            } else if (res.customButton) {
-                console.log('User tapped custom button: ', res.customButton);
-                Snackbar.show({ text: res.customButton })
-            } else {
-                const source = { uri: res.uri };
-                console.log('response', JSON.stringify(res));
+                console.log('User cancelled camera');
+            } else if (res.errorCode) {
+                console.log('ImagePicker Error: ', res.errorMessage);
+                Snackbar.show({ text: res.errorMessage || 'Camera Error' });
+            } else if (res.assets && res.assets.length > 0) {
+                const asset = res.assets[0];
                 this.setState({
+                    resourcePath: { uri: asset.uri, data: asset.base64 },
                     filePath: res,
-                    fileData: res.data,
-                    fileUri: res.uri
+                    fileData: asset.base64,
+                    fileUri: asset.uri,
                 });
             }
         });
     }
 
     imageGalleryLaunch = () => {
-        let options = {
-            storageOptions: {
-                skipBackup: true,
-                path: 'images',
-            },
+        const options = {
+            mediaType: 'photo',
+            includeBase64: true,
         };
 
         ImagePicker.launchImageLibrary(options, (res) => {
-            console.log('Response = ', res);
-
             if (res.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (res.error) {
-                console.log('ImagePicker Error: ', res.error);
-            } else if (res.customButton) {
-                console.log('User tapped custom button: ', res.customButton);
-                Snackbar.show({ text: res.customButton })
-            } else {
-                const source = { uri: res.uri };
-                console.log('response', JSON.stringify(res));
+                console.log('User cancelled image gallery');
+            } else if (res.errorCode) {
+                console.log('ImagePicker Error: ', res.errorMessage);
+                Snackbar.show({ text: res.errorMessage || 'Gallery Error' });
+            } else if (res.assets && res.assets.length > 0) {
+                const asset = res.assets[0];
                 this.setState({
+                    resourcePath: { uri: asset.uri, data: asset.base64 },
                     filePath: res,
-                    fileData: res.data,
-                    fileUri: res.uri
+                    fileData: asset.base64,
+                    fileUri: asset.uri,
                 });
             }
         });

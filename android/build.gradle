@@ -30,7 +30,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath('com.android.tools.build:gradle:8.7.2')
+        classpath('com.android.tools.build:gradle:8.10.1')
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
         classpath 'com.google.gms:google-services:4.4.2'
@@ -53,7 +53,6 @@ allprojects {
 
         google()
         mavenCentral()
-        jcenter()
         maven { url 'https://www.jitpack.io' }
     }
 
@@ -63,17 +62,17 @@ allprojects {
     def reactNativeVersion = new groovy.json.JsonSlurper()
             .parse(file("$rootDir/../node_modules/react-native/package.json")).version
     configurations.all {
-        resolutionStrategy.dependencySubstitution {
-            substitute(module("com.facebook.react:react-native"))
-                    .using(module("com.facebook.react:react-android:${reactNativeVersion}"))
-            substitute(module("com.facebook.react:hermes-engine"))
-                    .using(module("com.facebook.react:hermes-android:${reactNativeVersion}"))
+        resolutionStrategy {
+            // react-native-geolocation-service compiles against play-services-location where
+            // SettingsClient is a class; the Firebase BOM pulls a newer version where it is an
+            // interface, causing IncompatibleClassChangeError at runtime. Force one version.
+            force 'com.google.android.gms:play-services-location:21.3.0'
+            dependencySubstitution {
+                substitute(module("com.facebook.react:react-native"))
+                        .using(module("com.facebook.react:react-android:${reactNativeVersion}"))
+                substitute(module("com.facebook.react:hermes-engine"))
+                        .using(module("com.facebook.react:hermes-android:${reactNativeVersion}"))
+            }
         }
-    }
-}
-
-configurations.all {
-    resolutionStrategy {
-        force 'androidx.core:core-ktx:1.6.0'
     }
 }

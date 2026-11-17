@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import { Alert, Platform, PermissionsAndroid, Linking } from 'react-native'
 import messaging from '@react-native-firebase/messaging'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import StorageKey from '../../webservice/constant'
 import { apiSetFCMToken } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,8 +15,7 @@ function useFcmHook() {
     let messageListener
 
     useEffect(() => {
-        let systemVersion = DeviceInfo.getSystemVersion();
-        systemVersion > 12 ? checkNotificationPermission() : checkPermission();
+        (Platform.OS === 'android' && Platform.Version >= 33) ? checkNotificationPermission() : checkPermission();
         createMessageListener();
         return messageListener
     }, []);
@@ -137,10 +136,18 @@ function useFcmHook() {
 
     }
 
-    const wsSetFCMToken = (token) => {
+    const wsSetFCMToken = async (token) => {
+        let deviceId = '';
+        try {
+            deviceId = typeof DeviceInfo.getUniqueIdSync === 'function'
+                ? DeviceInfo.getUniqueIdSync()
+                : await DeviceInfo.getUniqueId();
+        } catch (e) {
+            deviceId = '';
+        }
         let data = {
             mobileDeviceInfo: {
-                deviceId: DeviceInfo.getUniqueId(),
+                deviceId: deviceId,
                 fcmToken: token
             }
         }

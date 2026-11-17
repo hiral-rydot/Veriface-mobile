@@ -19,7 +19,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { whiteColor, blueColor, inputBgColor, grayColor, darkGrayColor, iconColor } from '../styles/color';
 import { utils } from '../utils/utils'
 import Loader from '../components/loader'
-import { color } from 'react-native-reanimated';
 import Snackbar from 'react-native-snackbar';
 let ForgotPwd = (props) => {
   const [email, setEmail] = useState('')

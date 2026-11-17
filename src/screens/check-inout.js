@@ -25,7 +25,7 @@ import { utils } from '../utils/utils'
 import { apiCheckInOut } from '../actions'
 import NetInfo, { useNetInfo } from "@react-native-community/netinfo";
 import { useDispatch, useSelector } from 'react-redux'
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Snackbar from 'react-native-snackbar';
 const Realm = require('realm');
 const styles = StyleSheet.create({

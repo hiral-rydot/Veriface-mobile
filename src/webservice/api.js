@@ -1,5 +1,5 @@
 import StorageKey, { apiUrl } from '../webservice/constant';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo, { useNetInfo } from "@react-native-community/netinfo";
 import NavigationService from '../navigation/NavigationService';
 import { Alert, Platform } from 'react-native'

@@ -19,7 +19,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import FooterPoweredBy from '../components/footer-poweredby';
 import Loader from '../components/loader'
 import { utils } from '../utils/utils'
-import { color } from 'react-native-reanimated';
 import Snackbar from 'react-native-snackbar';
 let SignupGuest = (props) => {
   const dispatch = useDispatch();

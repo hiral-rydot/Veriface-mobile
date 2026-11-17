@@ -1,0 +1,33 @@
+diff --git a/node_modules/metro/src/Server.js b/node_modules/metro/src/Server.js
+index ec933c0..a304d2e 100644
+--- a/node_modules/metro/src/Server.js
++++ b/node_modules/metro/src/Server.js
+@@ -974,8 +974,26 @@ class Server {
+         createActionStartEntry("Symbolicating")
+       );
+       debug("Start symbolication");
+-      const body = await req.rawBody;
+-      const parsedBody = JSON.parse(body);
++      let parsedBody;
++      if (req.rawBody != null) {
++        const body = await req.rawBody;
++        parsedBody = typeof body === "string" ? JSON.parse(body) : body;
++      } else {
++        parsedBody = await new Promise((resolve, reject) => {
++          let data = "";
++          req.on("data", (chunk) => {
++            data += chunk;
++          });
++          req.on("end", () => {
++            try {
++              resolve(data ? JSON.parse(data) : {});
++            } catch (e) {
++              reject(e);
++            }
++          });
++          req.on("error", reject);
++        });
++      }
+       const rewriteAndNormalizeStackFrame = (frame, lineNumber) => {
+         invariant(
+           frame != null && typeof frame === "object",

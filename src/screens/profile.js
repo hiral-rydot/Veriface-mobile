@@ -32,7 +32,7 @@ import StorageKey, { uploadUrl } from '../webservice/constant'
 import BlueButton from '../components/blue-button';
 import { utils } from '../utils/utils';
 import Snackbar from 'react-native-snackbar';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const ReactNavigation = require('react-navigation');
 ReactNavigation.SafeAreaView.setStatusBarHeight(0);
 const maritalStatusArray = [
@@ -749,7 +749,9 @@ const Profile = (props) => {
                   mediaType: 'photo',
                   includeBase64: true,
                 });
-                setProfilePic('data:image/jpeg;base64,' + result.assets[0].base64);
+                if (result && !result.didCancel && result.assets && result.assets[0]?.base64) {
+                  setProfilePic('data:image/jpeg;base64,' + result.assets[0].base64);
+                }
                 setImageSelectorModal(false);
               }}>
                 <Text style={{ fontSize: 22, marginVertical: 10 }}>Take Photo</Text>
@@ -759,7 +761,9 @@ const Profile = (props) => {
                   mediaType: 'photo',
                   includeBase64: true,
                 });
-                setProfilePic('data:image/jpeg;base64,' + result.assets[0].base64);
+                if (result && !result.didCancel && result.assets && result.assets[0]?.base64) {
+                  setProfilePic('data:image/jpeg;base64,' + result.assets[0].base64);
+                }
                 setImageSelectorModal(false);
               }}>
                 <Text style={{ fontSize: 22, marginVertical: 10 }}>Choose Image</Text>

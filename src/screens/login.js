@@ -18,7 +18,7 @@ import BlueButton from '../components/blue-button';
 import { ScrollView } from 'react-native-gesture-handler';
 import FooterPoweredBy from '../components/footer-poweredby';
 import Loader from '../components/loader'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { setObject } from '../utils/storage'
 import StorageKey, { apiUrl } from '../webservice/constant'
 import NetInfo, { useNetInfo } from "@react-native-community/netinfo";

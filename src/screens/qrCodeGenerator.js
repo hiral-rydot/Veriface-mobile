@@ -29,7 +29,7 @@ const QRCodeGenerator = (props) => {
             file_path = RNFS.DownloadDirectoryPath + name
 
         if (Platform.OS === 'android') {
-            if (deviceInfoModule.getSystemVersion() <= '12') {
+            if (Platform.Version <= 32) {
                 const granted = await PermissionsAndroid.request(
                     PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
                     {

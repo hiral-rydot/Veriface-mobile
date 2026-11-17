@@ -33,7 +33,7 @@ import TopCurve from '../components/top-curve';
 import { PieChart } from 'react-native-chart-kit'
 import { getObject, setObject } from '../utils/storage'
 import StorageKey, { uploadUrl, RegistrationStatus, markAsSafeUrl, apiUrl } from '../webservice/constant'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StackActions, NavigationActions, useTheme } from 'react-navigation';
 // import { AdMobBanner } from 'react-native-admob'
 import { SafeAreaView } from 'react-native-safe-area-context';

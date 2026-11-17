@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Button, Image, Platform, Aler
 import * as ImagePicker from 'react-native-image-picker';
 import Snackbar from 'react-native-snackbar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { check, request, PERMISSIONS } from 'react-native-permissions';
 import { style } from '../styles/style';
 
 export default class SelectImage extends React.Component {
@@ -39,6 +40,23 @@ export default class SelectImage extends React.Component {
 
     // Launch Camera
     cameraLaunch = () => {
+        const cameraPermission = Platform.OS === 'android' ? PERMISSIONS.ANDROID.CAMERA : PERMISSIONS.IOS.CAMERA;
+        check(cameraPermission).then((status) => {
+            if (status === 'granted') {
+                this.launchCamera();
+            } else {
+                request(cameraPermission).then((res) => {
+                    if (res === 'granted') {
+                        this.launchCamera();
+                    } else {
+                        Snackbar.show({ text: 'Camera permission is required' });
+                    }
+                });
+            }
+        });
+    }
+
+    launchCamera = () => {
         const options = {
             mediaType: 'photo',
             includeBase64: true,

@@ -10,7 +10,7 @@ This document describes the code currently in the repository. The JavaScript man
 
 ### Application entry and bootstrap
 
-- `index.js` creates the Redux store, attaches `redux-saga`, starts `rootSaga`, wraps the application in `Provider`, and registers the `TurnoutM` component.
+- `index.js` creates the Redux store, attaches `redux-saga`, starts `rootSaga`, wraps the application in `Provider`, and registers the `veriface` component.
 - `App.js` creates the React Navigation container, installs the top-level `NavigationService` reference, registers the Firebase background-message handler, and monitors connectivity for offline attendance replay.
 - `App.tsx` is the unused React Native template screen. The runtime entry point imports `App.js`.
 
